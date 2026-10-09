@@ -15,9 +15,9 @@ ACCESS_TOKEN_MINUTES = int(os.getenv("ACCESS_TOKEN_MINUTES", "1440"))
 # Prioritizes APP_POSTGRES_DB_URL, then DATABASE_URL
 DATABASE_URL = (
     os.getenv("APP_POSTGRES_DB_URL")
-    or os.getenv("DATABASE_URL")
-    or "postgresql+psycopg://oasis_app:0827@localhost:5432/oasis_db"
 )
+
+ONLINE_DB = os.getenv("RENDER_DB")
 
 # Normalize PostgreSQL driver prefix to psycopg (SQLAlchemy 2.0 recommended)
 if DATABASE_URL.startswith("postgres://"):
@@ -26,7 +26,7 @@ elif DATABASE_URL.startswith("postgresql://") and "+psycopg" not in DATABASE_URL
     DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+psycopg://", 1)
 
 engine = create_engine(
-    DATABASE_URL,
+    ONLINE_DB,
     pool_size=20,
     max_overflow=20,
     pool_pre_ping=True
