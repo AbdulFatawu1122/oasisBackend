@@ -68,8 +68,8 @@ app.add_middleware(GZipMiddleware, minimum_size=1000)
 register_routes(app=app)
 
 
-@app.get("/")
-@app.get("/health")
+@app.api_route("/", methods=["GET", "HEAD"])
+@app.api_route("/health", methods=["GET", "HEAD"])
 def health_check():
     return {
         "status": "healthy",

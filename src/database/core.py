@@ -12,12 +12,10 @@ ALGORITHM = os.getenv("ALGORITHM", "HS256")
 ACCESS_TOKEN_MINUTES = int(os.getenv("ACCESS_TOKEN_MINUTES", "1440"))
 
 # PostgreSQL Database Connection
-# Prioritizes APP_POSTGRES_DB_URL, then DATABASE_URL
-DATABASE_URL = (
-    os.getenv("APP_POSTGRES_DB_URL")
-)
+# Prioritizes RENDER_DB, then DATABASE_URL, then APP_POSTGRES_DB_URL
 
-ONLINE_DB = os.getenv("RENDER_DB")
+# RENDER_DB  DATABASE_URL
+DATABASE_URL = os.getenv("RENDER_DB")
 
 # Normalize PostgreSQL driver prefix to psycopg (SQLAlchemy 2.0 recommended)
 if DATABASE_URL.startswith("postgres://"):
@@ -26,7 +24,7 @@ elif DATABASE_URL.startswith("postgresql://") and "+psycopg" not in DATABASE_URL
     DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+psycopg://", 1)
 
 engine = create_engine(
-    ONLINE_DB,
+    DATABASE_URL,
     pool_size=20,
     max_overflow=20,
     pool_pre_ping=True
